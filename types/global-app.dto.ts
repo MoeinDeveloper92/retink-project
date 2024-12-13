@@ -3,8 +3,8 @@ export type ModelInput = {
 };
 
 export interface ModelResponse {
-  image: string; // Image URL
-  caption: string; // Caption text
+  image: string;
+  caption: string;
 }
 
 export type ModelError = {

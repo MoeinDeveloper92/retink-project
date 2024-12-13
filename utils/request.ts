@@ -54,7 +54,6 @@ export const fetchDataFromModel = async (
       caption: captionText,
     };
   } catch (error) {
-    console.error('Error fetching data:', error);
     return undefined;
   }
 };

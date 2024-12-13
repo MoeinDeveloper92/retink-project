@@ -5,8 +5,8 @@ export const GET = async (request: NextRequest) => {
     const prompt = request.nextUrl.searchParams.get('prompt');
 
     if (!prompt) {
-      return NextResponse.json(
-        { error: 'Prompt is required by the user' },
+      return new Response(
+        JSON.stringify({ message: 'Prompt is required by the user' }),
         { status: 400 }
       );
     }
@@ -16,10 +16,9 @@ export const GET = async (request: NextRequest) => {
     );
 
     if (!imageResponse.ok) {
-      return NextResponse.json(
-        { error: 'Failed to fetch image' },
-        { status: 500 }
-      );
+      return new Response(JSON.stringify({ error: 'Failed to fetch image' }), {
+        status: 500,
+      });
     }
 
     const imageUrl = imageResponse.url;
@@ -31,28 +30,46 @@ export const GET = async (request: NextRequest) => {
     );
 
     if (!textResponse.ok) {
-      return NextResponse.json(
-        { error: 'Failed to fetch caption' },
+      return new Response(
+        JSON.stringify({ error: 'Failed to fetch caption' }),
         { status: 500 }
       );
     }
+
+    if (textResponse.body === null) {
+      return new Response(
+        JSON.stringify({ error: 'Failed to fetch caption body' }),
+        { status: 500 }
+      );
+    }
+
+    const reader = (
+      textResponse.body as ReadableStream<Uint8Array>
+    ).getReader();
 
     const stream = new ReadableStream({
       start(controller) {
         const imageJson = JSON.stringify({ image: imageUrl });
         controller.enqueue(new TextEncoder().encode(imageJson + '\n\n'));
 
-        const reader = textResponse.body.getReader();
         function push() {
-          reader.read().then(({ done, value }) => {
-            if (done) {
+          reader
+            .read()
+            .then(({ done, value }) => {
+              if (done) {
+                controller.close();
+                return;
+              }
+
+              controller.enqueue(value);
+              push();
+            })
+            .catch((error) => {
+              console.error('Stream reading error:', error);
               controller.close();
-              return;
-            }
-            controller.enqueue(value);
-            push();
-          });
+            });
         }
+
         push();
       },
     });
@@ -61,10 +78,9 @@ export const GET = async (request: NextRequest) => {
       headers: { 'Content-Type': 'text/plain' },
     });
   } catch (error) {
-    console.log('Error', error);
-    return NextResponse.json(
-      { error: 'Internal server error' },
-      { status: 500 }
-    );
+    console.error('Internal server error:', error);
+    return new Response(JSON.stringify({ error: 'Internal server error' }), {
+      status: 500,
+    });
   }
 };
