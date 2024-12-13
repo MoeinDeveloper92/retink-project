@@ -1,10 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server';
 
-export const GET = async (request: NextRequest): Promise<NextResponse> => {
+export const GET = async (request: NextRequest) => {
   try {
-    // 1. Get the prompt from the client
     const prompt = request.nextUrl.searchParams.get('prompt');
-    console.log('PROMPT is,', prompt);
 
     if (!prompt) {
       return NextResponse.json(
@@ -13,7 +11,6 @@ export const GET = async (request: NextRequest): Promise<NextResponse> => {
       );
     }
 
-    // 2. Call image generator API
     const imageResponse = await fetch(
       `https://image.pollinations.ai/prompt/${encodeURIComponent(prompt)}`
     );
@@ -27,9 +24,8 @@ export const GET = async (request: NextRequest): Promise<NextResponse> => {
 
     const imageUrl = imageResponse.url;
 
-    // 3. Call caption generator
     const textResponse = await fetch(
-      `https://text.pollinations.ai/Generate caption which is 100 words with hashtag for instagram post for this${encodeURIComponent(
+      `https://text.pollinations.ai/Generate caption which is maximum 100 words with hashtag for instagram post for this${encodeURIComponent(
         prompt
       )}`
     );
@@ -41,16 +37,29 @@ export const GET = async (request: NextRequest): Promise<NextResponse> => {
       );
     }
 
-    const caption = await textResponse.text();
+    const stream = new ReadableStream({
+      start(controller) {
+        const imageJson = JSON.stringify({ image: imageUrl });
+        controller.enqueue(new TextEncoder().encode(imageJson + '\n\n'));
 
-    return NextResponse.json(
-      {
-        prompt,
-        image: imageUrl,
-        caption, // ✅ Caption instead of "text"
+        const reader = textResponse.body.getReader();
+        function push() {
+          reader.read().then(({ done, value }) => {
+            if (done) {
+              controller.close();
+              return;
+            }
+            controller.enqueue(value);
+            push();
+          });
+        }
+        push();
       },
-      { status: 200 }
-    );
+    });
+
+    return new Response(stream, {
+      headers: { 'Content-Type': 'text/plain' },
+    });
   } catch (error) {
     console.log('Error', error);
     return NextResponse.json(

@@ -2,11 +2,10 @@ export type ModelInput = {
   prompt: string;
 };
 
-export type ModelResponse = {
-  prompt: string;
-  image: string;
-  caption: string;
-};
+export interface ModelResponse {
+  image: string; // Image URL
+  caption: string; // Caption text
+}
 
 export type ModelError = {
   error: string;
