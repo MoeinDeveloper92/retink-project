@@ -7,6 +7,7 @@ import { ModelResponse } from '@/types/global-app.dto';
 import { typeCaption } from '@/utils/request';
 import Spinner from '@/components/Spinner';
 import { toast } from 'react-toastify';
+import ShareButtons from '@/components/ShareButtons';
 
 const HomePage = () => {
   const [prompt, setPrompt] = useState<string>('');
@@ -64,11 +65,14 @@ const HomePage = () => {
         Type the description of your desired picture
       </motion.h1>
 
-      <form onSubmit={handleForm} className="mt-5 space-x-3 ml-5 outline-none">
+      <form
+        onSubmit={handleForm}
+        className="mt-5 flex items-center mb-10 justify-center space-x-3 ml-5 outline-none"
+      >
         <input
           aria-label="Type your Text"
           placeholder="Type your Text..."
-          className="border-[1px] mb-5 border-black w-[300px] max-lg:w-[200px] max-lg:p-2 p-3"
+          className="border-[1px]  border-black w-[300px] max-lg:w-[200px] max-lg:p-2 p-3"
           value={prompt}
           onChange={(e) => setPrompt(e.target.value)}
           type="text"
@@ -90,7 +94,7 @@ const HomePage = () => {
             key={image}
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
-            transition={{ delay: 0.2, duration: 1 }}
+            transition={{ delay: 0.1, duration: 2 }}
           >
             <Image
               alt="Picture"
@@ -106,6 +110,7 @@ const HomePage = () => {
             {caption}
           </h1>
         )}
+        {caption && <ShareButtons />}
       </div>
     </section>
   );

@@ -74,6 +74,7 @@ export const GET = async (request: NextRequest) => {
       },
     });
 
+    console.log('STREAAAM-=>>>.', stream);
     return new Response(stream, {
       headers: { 'Content-Type': 'text/plain' },
     });
