@@ -1,4 +1,4 @@
-import { ModelResponse } from '@/types/global-app.dto';
+import { ModelResponse } from '@/@types/global-app.dto';
 
 export const fetchDataFromModel = async (
   prompt: string,

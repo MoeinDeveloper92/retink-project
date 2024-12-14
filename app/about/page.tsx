@@ -8,7 +8,7 @@ const page = () => {
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ duration: 0.5, delay: 0.5 }}
-        className="mt-20 ml-4 self-center text-8xl text-white "
+        className="mt-20 ml-4 self-center text-8xl max-sm:text-3xl text-white "
       >
         About This App
       </motion.h1>
@@ -16,7 +16,7 @@ const page = () => {
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ delay: 0.5, duration: 0.5 }}
-        className="text-3xl"
+        className="text-3xl max-sm:text-xl max-sm:text-center"
       >
         This app is just a simple version of Image generation with correspondign
         caption prepared to get posted on Instagram. This web tool utlizes two
@@ -26,16 +26,16 @@ const page = () => {
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ delay: 0.7, duration: 0.7 }}
-        className="flex flex-col text-3xl items-start gap-8 "
+        className="flex flex-col text-3xl items-start gap-8 max-sm:text-xl max-sm:items-center "
       >
         <br />
-        <li className="text-white ">
+        <li className="text-white max-sm:text-center ">
           <span className="font-bold text-black">Generate Image (GET):</span> `
           https://image.pollinations.ai/prompt/prompt` - Params: prompt*, model,
           seed, width, height, nologo, private, enhance, safe - Return: Image
           file
         </li>
-        <li className="text-white">
+        <li className="text-white max-sm:text-center">
           <span className="font-bold text-black">Generate Text(GET):</span> `
           https://text.pollinations.ai/prompt` - Params: prompt*, model, seed,
           json, system - Return: Generated text
@@ -49,7 +49,7 @@ const page = () => {
           duration: 0.5,
           ease: 'circInOut',
         }}
-        className=""
+        className=" max-sm:text-center mb-4"
       >
         <h1 className="text-xl text-white">Area of Improvments</h1>
         <p className="flex flex-col gap-3">

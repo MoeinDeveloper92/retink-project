@@ -3,7 +3,7 @@ import React, { useEffect, useState } from 'react';
 import Image from 'next/image';
 import { motion } from 'framer-motion';
 import { fetchDataFromModel } from '@/utils/request';
-import { ModelResponse } from '@/types/global-app.dto';
+import { ModelResponse } from '@/@types/global-app.dto';
 import { typeCaption } from '@/utils/request';
 import Spinner from '@/components/Spinner';
 import { toast } from 'react-toastify';
