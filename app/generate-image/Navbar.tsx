@@ -3,7 +3,7 @@ import React from 'react';
 import Link from 'next/link';
 import useScrollDirection from '@/hook/useScrollDirection';
 import { Button } from '../../components/ui/button';
-import { UserButton } from '@clerk/nextjs';
+
 const Navbar = () => {
   const { scrollingDown, atTop } = useScrollDirection();
 
@@ -18,17 +18,6 @@ const Navbar = () => {
           <h1 className=" font-semibold text-xl">Image Generator</h1>
         </Link>
         <div className="flex items-center gap-5">
-          <UserButton
-            afterSwitchSessionUrl="/"
-            appearance={{
-              elements: {
-                avatarBox: {
-                  width: '2.5rem',
-                  height: '2.5rem',
-                },
-              },
-            }}
-          />
           <Link href="/about">
             <Button>About</Button>
           </Link>

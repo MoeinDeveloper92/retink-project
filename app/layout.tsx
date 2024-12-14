@@ -26,15 +26,13 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <ClerkProvider>
-      <html lang="en">
-        <body
-          className={` overflow-auto bg-gray-600  ${geistSans.variable} ${geistMono.variable} antialiased`}
-        >
-          {children}
-          <ToastContainer />
-        </body>
-      </html>
-    </ClerkProvider>
+    <html lang="en">
+      <body
+        className={` overflow-auto bg-gray-600  ${geistSans.variable} ${geistMono.variable} antialiased`}
+      >
+        {children}
+        <ToastContainer />
+      </body>
+    </html>
   );
 }
