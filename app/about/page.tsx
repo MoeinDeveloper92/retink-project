@@ -38,14 +38,14 @@ const page = () => {
       >
         <br />
         <li className="text-white max-sm:text-center ">
-          <span className="font-bold text-black">Generate Image (GET):</span> `
-          https://image.pollinations.ai/prompt/prompt` - Params: prompt*, model,
+          <span className="font-bold text-black">Generate Image (GET):</span>
+          https://image.pollinations.ai/prompt/prompt - Params: prompt, model,
           seed, width, height, nologo, private, enhance, safe - Return: Image
           file
         </li>
         <li className="text-white max-sm:text-center">
-          <span className="font-bold text-black">Generate Text(GET):</span> `
-          https://text.pollinations.ai/prompt` - Params: prompt*, model, seed,
+          <span className="font-bold text-black">Generate Text(GET):</span>
+          https://text.pollinations.ai/prompt - Params: prompt, model, seed,
           json, system - Return: Generated text
         </li>
       </motion.ul>

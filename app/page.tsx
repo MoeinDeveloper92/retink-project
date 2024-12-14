@@ -23,7 +23,7 @@ const page = async () => {
           Authentication is simply mage by Google OAuth
         </h3>
         <Button size={'lg'} asChild>
-          <Link href={'/sign-in'}>Let's Get Started</Link>
+          <Link href={'/sign-in'}>Lets Get Started</Link>
         </Button>
       </div>
     </div>
