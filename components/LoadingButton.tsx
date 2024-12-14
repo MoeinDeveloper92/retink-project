@@ -7,7 +7,6 @@ type LoadingButtonProps = {
 export default function LoadingButton({
   children,
   loading,
-  ...props
 }: LoadingButtonProps) {
   return (
     <Button className="p-6">
