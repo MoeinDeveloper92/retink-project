@@ -1,9 +1,19 @@
 'use client';
 import React from 'react';
 import { motion } from 'framer-motion';
+import { Button } from '@/components/ui/button';
+import Link from 'next/link';
+import { auth } from '@clerk/nextjs/server';
+import { useAuth } from '@clerk/nextjs';
 const page = () => {
+  const { userId } = useAuth();
   return (
     <section className=" container mx-auto flex flex-col items-start gap-16">
+      <div className="relative top-10">
+        <Button asChild>
+          <Link href={`${userId && '/generate-image'} `}>Back</Link>
+        </Button>
+      </div>
       <motion.h1
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
