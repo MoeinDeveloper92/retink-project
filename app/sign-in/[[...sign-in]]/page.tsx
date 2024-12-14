@@ -1,7 +1,7 @@
 import { SignIn } from '@clerk/nextjs';
 import { Metadata } from 'next';
 
-export const metata: Metadata = {
+export const metadata: Metadata = {
   title: 'Image Generator - SingIn',
 };
 
