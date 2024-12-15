@@ -2,11 +2,8 @@
 import React, { useEffect, useState } from 'react';
 import Image from 'next/image';
 import { motion } from 'framer-motion';
-import { fetchDataFromModel } from '@/utils/request';
-import { ModelResponse } from '@/@types/global-app.dto';
-import { typeCaption } from '@/utils/request';
-import Spinner from '@/components/Spinner';
 import { toast } from 'react-toastify';
+import Spinner from '@/components/Spinner';
 import ShareButtons from '@/components/ShareButtons';
 import LoadingButton from '@/components/LoadingButton';
 import { Button } from '@/components/ui/button';
@@ -18,6 +15,30 @@ const HomePage = () => {
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | undefined>(undefined);
 
+  // Fetch image
+  const fetchImage = async (prompt: string) => {
+    const response = await fetch(
+      `/api/fetch-image?prompt=${encodeURIComponent(prompt)}`
+    );
+    if (!response.ok) {
+      throw new Error('Failed to fetch image');
+    }
+    const data = await response.json();
+    return data.image; // Return the image URL
+  };
+
+  // Fetch caption
+  const fetchCaption = async (prompt: string) => {
+    const response = await fetch(
+      `/api/fetch-caption?prompt=${encodeURIComponent(prompt)}`
+    );
+    if (!response.ok) {
+      throw new Error('Failed to fetch caption');
+    }
+    const data = await response.json();
+    return data.caption; // Return the caption
+  };
+
   const handleForm = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setLoading(true);
@@ -26,27 +47,22 @@ const HomePage = () => {
     setImage('');
 
     try {
-      const data: ModelResponse | undefined = await fetchDataFromModel(
-        prompt,
-        (chunk: string) => {
-          setCaption((prev) => prev + chunk);
-        }
-      );
+      // Step 1: Fetch the image
+      const imageUrl = await fetchImage(prompt);
 
-      if (data) {
-        setImage(data.image);
-        typeCaption(data.caption, setCaption);
-        setPrompt('');
-      } else {
-        setError('Prompt cannot be empty');
-      }
-    } catch (error) {
-      console.log(error);
+      // Step 2: Fetch the caption
+      const captionText = await fetchCaption(prompt);
+
+      // Step 3: Set state
+      setImage(imageUrl);
+      setCaption(captionText);
+
+      setPrompt(''); // Clear the prompt field
+    } catch (error: any) {
+      console.error(error);
       setError('An error occurred. Please try again.');
-      console.error('Error:', error);
     } finally {
       setLoading(false);
-      setPrompt('');
     }
   };
 
@@ -63,7 +79,7 @@ const HomePage = () => {
   };
 
   return (
-    <section className="min-h-screen bg-gradient-to-tr from-blue-100 to-slate-500  overflow-hidden max-lg:flex max-lg:flex-col p-5 max-lg:items-center max-lg:gap-8">
+    <section className="min-h-screen bg-gradient-to-tr from-blue-100 to-slate-500 overflow-hidden max-lg:flex max-lg:flex-col p-5 max-lg:items-center max-lg:gap-8">
       <motion.h1
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
@@ -80,14 +96,14 @@ const HomePage = () => {
         <input
           aria-label="Type your Text"
           placeholder="Type your Text..."
-          className="border-[1px]  border-black w-[300px] max-lg:w-[200px] max-lg:p-2 p-3"
+          className="border-[1px] border-black w-[300px] max-lg:w-[200px] max-lg:p-2 p-3"
           value={prompt}
           onChange={(e) => setPrompt(e.target.value)}
           type="text"
         />
         <LoadingButton
           loading={loading}
-          className="bg-green-500  max-lg:p-2  border-[1px] border-black text-white"
+          className="bg-green-500 max-lg:p-2 border-[1px] border-black text-white"
           type="submit"
           disabled={loading}
         >
@@ -115,7 +131,7 @@ const HomePage = () => {
           </motion.div>
         )}
         {caption && (
-          <h1 className="mt-5 font-serif  max-lg:max-w-[300px] max-lg:mb-12 mb-6 text-black text-justify">
+          <h1 className="mt-5 font-serif max-lg:max-w-[300px] max-lg:mb-12 mb-6 text-black text-justify">
             Prepared Caption: {caption}
           </h1>
         )}
