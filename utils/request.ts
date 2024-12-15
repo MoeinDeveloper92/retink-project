@@ -73,3 +73,25 @@ export const typeCaption = (
     }
   }, speed);
 };
+
+export const fetchImage = async (prompt: string): Promise<string> => {
+  const response = await fetch(
+    `/api/fetch-image?prompt=${encodeURIComponent(prompt)}`
+  );
+  if (!response.ok) {
+    throw new Error('Failed to fetch image');
+  }
+  const data = await response.json();
+  return data.image;
+};
+
+export const fetchCaption = async (prompt: string): Promise<string> => {
+  const response = await fetch(
+    `/api/fetch-caption?prompt=${encodeURIComponent(prompt)}`
+  );
+  if (!response.ok) {
+    throw new Error('Failed to fetch caption');
+  }
+  const data = await response.json();
+  return data.caption;
+};

@@ -7,35 +7,13 @@ import Spinner from '@/components/Spinner';
 import ShareButtons from '@/components/ShareButtons';
 import LoadingButton from '@/components/LoadingButton';
 import { Button } from '@/components/ui/button';
-
+import { fetchCaption, fetchImage, typeCaption } from '@/utils/request';
 const HomePage = () => {
   const [prompt, setPrompt] = useState<string>('');
   const [image, setImage] = useState<string | undefined>(undefined);
   const [caption, setCaption] = useState<string>('');
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | undefined>(undefined);
-
-  const fetchImage = async (prompt: string) => {
-    const response = await fetch(
-      `/api/fetch-image?prompt=${encodeURIComponent(prompt)}`
-    );
-    if (!response.ok) {
-      throw new Error('Failed to fetch image');
-    }
-    const data = await response.json();
-    return data.image;
-  };
-
-  const fetchCaption = async (prompt: string) => {
-    const response = await fetch(
-      `/api/fetch-caption?prompt=${encodeURIComponent(prompt)}`
-    );
-    if (!response.ok) {
-      throw new Error('Failed to fetch caption');
-    }
-    const data = await response.json();
-    return data.caption;
-  };
 
   const handleForm = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -50,12 +28,13 @@ const HomePage = () => {
       const captionText = await fetchCaption(prompt);
 
       setImage(imageUrl);
-      setCaption(captionText);
+
+      typeCaption(captionText, setCaption);
 
       setPrompt('');
     } catch (error: any) {
       console.error(error);
-      setError('An error occurred. Please try again.');
+      setError('Server timeOut');
     } finally {
       setLoading(false);
     }
