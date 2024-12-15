@@ -53,7 +53,7 @@ export const GET = async (request: NextRequest) => {
         controller.enqueue(new TextEncoder().encode(imageJson + '\n\n'));
 
         function push() {
-          reader
+          readers
             .read()
             .then(({ done, value }) => {
               if (done) {
