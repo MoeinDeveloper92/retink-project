@@ -27,7 +27,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={` overflow-auto bg-gray-600  ${geistSans.variable} ${geistMono.variable} antialiased`}
+        className={` overflow-auto bg-gradient-to-tr from-blue-500 to-slate-500  ${geistSans.variable} ${geistMono.variable} antialiased`}
       >
         {children}
         <ToastContainer />

@@ -6,9 +6,9 @@ import Link from 'next/link';
 
 const page = () => {
   return (
-    <section className=" container mx-auto flex flex-col items-start gap-16">
+    <section className=" container mx-auto flex flex-col items-start gap-16  overflow-x-hidden">
       <div className="relative top-10">
-        <Button asChild>
+        <Button asChild className="max-sm:ml-5">
           <Link href={`/generate-image`}>Back</Link>
         </Button>
       </div>
@@ -34,17 +34,20 @@ const page = () => {
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ delay: 0.7, duration: 0.7 }}
-        className="flex flex-col text-3xl items-start gap-8 max-sm:text-xl max-sm:items-center "
+        className="flex flex-col text-3xl items-start  gap-8 max-sm:text-xl max-sm:items-center "
       >
-        <br />
-        <li className="text-white max-sm:text-center ">
-          <span className="font-bold text-black">Generate Image (GET):</span>
+        <li className="text-white max-sm:text-center  self-center ">
+          <span className="font-bold text-black px-3">
+            Generate Image (GET):
+          </span>
+          <br />
           https://image.pollinations.ai/prompt/prompt - Params: prompt, model,
           seed, width, height, nologo, private, enhance, safe - Return: Image
           file
         </li>
         <li className="text-white max-sm:text-center">
-          <span className="font-bold text-black">Generate Text(GET):</span>
+          <span className="font-bold px-3 text-black">Generate Text(GET):</span>
+          <br />
           https://text.pollinations.ai/prompt - Params: prompt, model, seed,
           json, system - Return: Generated text
         </li>

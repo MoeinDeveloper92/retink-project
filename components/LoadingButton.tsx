@@ -9,7 +9,7 @@ export default function LoadingButton({
   loading,
 }: LoadingButtonProps) {
   return (
-    <Button className="p-6">
+    <Button className="p-5">
       {loading && <Loader className="mr-2 h-4 w-4 animate-spin" />}
       {children}
     </Button>

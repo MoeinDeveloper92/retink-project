@@ -9,11 +9,11 @@ const Navbar = () => {
 
   return (
     <div
-      className={`bg-gray-400  w-full transition-transform duration-300 ${
+      className={`bg-sky-300  w-full transition-transform duration-300 ${
         scrollingDown && !atTop ? '-translate-y-full' : 'translate-y-0'
       }`}
     >
-      <div className="p-5 flex justify-around bg-gray-400">
+      <div className="p-5 flex justify-around bg-blue-50">
         <Link href={'/'}>
           <h1 className=" font-semibold text-xl">Image Generator</h1>
         </Link>

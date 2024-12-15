@@ -9,6 +9,7 @@ import Spinner from '@/components/Spinner';
 import { toast } from 'react-toastify';
 import ShareButtons from '@/components/ShareButtons';
 import LoadingButton from '@/components/LoadingButton';
+import { Button } from '@/components/ui/button';
 
 const HomePage = () => {
   const [prompt, setPrompt] = useState<string>('');
@@ -55,8 +56,14 @@ const HomePage = () => {
     }
   }, [error]);
 
+  const handleReset = () => {
+    setPrompt('');
+    setCaption('');
+    setImage('');
+  };
+
   return (
-    <section className="min-h-screen bg-gray-600 overflow-hidden max-lg:flex max-lg:flex-col p-5 max-lg:items-center max-lg:gap-8">
+    <section className="min-h-screen bg-gradient-to-tr from-blue-100 to-slate-500  overflow-hidden max-lg:flex max-lg:flex-col p-5 max-lg:items-center max-lg:gap-8">
       <motion.h1
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
@@ -108,11 +115,16 @@ const HomePage = () => {
           </motion.div>
         )}
         {caption && (
-          <h1 className="mt-5 max-lg:max-w-[300px] max-lg:mb-12 mb-6 text-white text-justify">
-            {caption}
+          <h1 className="mt-5 font-serif  max-lg:max-w-[300px] max-lg:mb-12 mb-6 text-black text-justify">
+            Prepared Caption: {caption}
           </h1>
         )}
         {caption && <ShareButtons />}
+        {caption && (
+          <div>
+            <Button onClick={handleReset}>Reset</Button>
+          </div>
+        )}
       </div>
     </section>
   );

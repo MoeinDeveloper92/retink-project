@@ -1,3 +1,7 @@
+export const config = {
+  runtime: 'edge',
+};
+
 import { NextRequest } from 'next/server';
 
 export const GET = async (request: NextRequest) => {
@@ -10,24 +14,22 @@ export const GET = async (request: NextRequest) => {
         { status: 400 }
       );
     }
-
-    const imageResponse = await fetch(
-      `https://image.pollinations.ai/prompt/${encodeURIComponent(prompt)}`
-    );
+    const [imageResponse, textResponse] = await Promise.all([
+      fetch(
+        `https://image.pollinations.ai/prompt/${encodeURIComponent(prompt)}`
+      ),
+      fetch(
+        `https://text.pollinations.ai/Generate caption which is maximum 100 words with hashtag for instagram post for this${encodeURIComponent(
+          prompt
+        )}`
+      ),
+    ]);
 
     if (!imageResponse.ok) {
       return new Response(JSON.stringify({ error: 'Failed to fetch image' }), {
         status: 500,
       });
     }
-
-    const imageUrl = imageResponse.url;
-
-    const textResponse = await fetch(
-      `https://text.pollinations.ai/Generate caption which is maximum 100 words with hashtag for instagram post for this${encodeURIComponent(
-        prompt
-      )}`
-    );
 
     if (!textResponse.ok) {
       return new Response(
@@ -43,6 +45,7 @@ export const GET = async (request: NextRequest) => {
       );
     }
 
+    const imageUrl = imageResponse.url;
     const reader = (
       textResponse.body as ReadableStream<Uint8Array>
     ).getReader();
@@ -53,7 +56,7 @@ export const GET = async (request: NextRequest) => {
         controller.enqueue(new TextEncoder().encode(imageJson + '\n\n'));
 
         function push() {
-          readers
+          reader
             .read()
             .then(({ done, value }) => {
               if (done) {
@@ -74,7 +77,6 @@ export const GET = async (request: NextRequest) => {
       },
     });
 
-    console.log('STREAAAM-=>>>.', stream);
     return new Response(stream, {
       headers: { 'Content-Type': 'text/plain' },
     });
