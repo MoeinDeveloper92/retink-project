@@ -32,9 +32,14 @@ const HomePage = () => {
       typeCaption(captionText, setCaption);
 
       setPrompt('');
-    } catch (error: any) {
-      console.error(error);
-      setError('Server timeOut');
+    } catch (error: unknown) {
+      if (error instanceof Error) {
+        console.error(error.message);
+        setError('An error occurred. Please try again.');
+      } else {
+        console.error('An unknown error occurred');
+        setError('An unknown error occurred');
+      }
     } finally {
       setLoading(false);
     }
