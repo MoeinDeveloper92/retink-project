@@ -15,7 +15,6 @@ const HomePage = () => {
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | undefined>(undefined);
 
-  // Fetch image
   const fetchImage = async (prompt: string) => {
     const response = await fetch(
       `/api/fetch-image?prompt=${encodeURIComponent(prompt)}`
@@ -24,10 +23,9 @@ const HomePage = () => {
       throw new Error('Failed to fetch image');
     }
     const data = await response.json();
-    return data.image; // Return the image URL
+    return data.image;
   };
 
-  // Fetch caption
   const fetchCaption = async (prompt: string) => {
     const response = await fetch(
       `/api/fetch-caption?prompt=${encodeURIComponent(prompt)}`
@@ -36,7 +34,7 @@ const HomePage = () => {
       throw new Error('Failed to fetch caption');
     }
     const data = await response.json();
-    return data.caption; // Return the caption
+    return data.caption;
   };
 
   const handleForm = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -47,17 +45,14 @@ const HomePage = () => {
     setImage('');
 
     try {
-      // Step 1: Fetch the image
       const imageUrl = await fetchImage(prompt);
 
-      // Step 2: Fetch the caption
       const captionText = await fetchCaption(prompt);
 
-      // Step 3: Set state
       setImage(imageUrl);
       setCaption(captionText);
 
-      setPrompt(''); // Clear the prompt field
+      setPrompt('');
     } catch (error: any) {
       console.error(error);
       setError('An error occurred. Please try again.');
