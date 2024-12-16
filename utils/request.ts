@@ -75,8 +75,12 @@ export const typeCaption = (
 };
 
 export const fetchImage = async (prompt: string): Promise<string> => {
+  console.log('PROMPT COMMINGF FROM UI =>>>>, prompt');
   const response = await fetch(
-    `/api/fetch-image?prompt=${encodeURIComponent(prompt)}`
+    `/api/fetch-image?prompt=${encodeURIComponent(prompt)}`,
+    {
+      method: 'POST',
+    }
   );
   if (!response.ok) {
     throw new Error('Failed to fetch image');
@@ -85,13 +89,56 @@ export const fetchImage = async (prompt: string): Promise<string> => {
   return data.image;
 };
 
-export const fetchCaption = async (prompt: string): Promise<string> => {
-  const response = await fetch(
-    `/api/fetch-caption?prompt=${encodeURIComponent(prompt)}`
-  );
-  if (!response.ok) {
-    throw new Error('Failed to fetch caption');
+export const fetchCaption = async (
+  prompt: string,
+  setResponsText: React.Dispatch<React.SetStateAction<string>>,
+  setLoading: React.Dispatch<React.SetStateAction<boolean>>
+) => {
+  try {
+    const response: Response = await fetch(
+      `/api/fetch-caption?prompt=${encodeURIComponent(prompt)}`,
+      {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json', // <-- Corrected content type (typo: "application-json" to "application/json")
+        },
+      }
+    );
+
+    if (!response.ok) {
+      throw new Error('Something went wrong');
+    }
+
+    const reader = response.body?.getReader();
+    if (!reader) {
+      throw new Error('Unable to read response body.');
+    }
+
+    const decoder = new TextDecoder();
+
+    while (true) {
+      const { done, value } = await reader.read(); // Ensure this returns a ReadableStreamReadResult<Uint8Array>
+
+      if (done) break;
+
+      if (value) {
+        const chunkOfText = decoder.decode(value, { stream: true }); // Added `{ stream: true }` for efficient streaming
+        setResponsText((pre) => pre + chunkOfText);
+      }
+    }
+  } catch (error) {
+    console.log(error);
+    setResponsText('Cannot retrieve Response from Gemini API');
+  } finally {
+    setLoading(false);
   }
-  const data = await response.json();
-  return data.caption;
 };
+
+// const response = await fetch(
+//   `/api/fetch-caption?prompt=${encodeURIComponent(prompt)}`
+// );
+// if (!response.ok) {
+//   throw new Error('Failed to fetch caption');
+// }
+// const data = await response.json();
+// return data.caption;

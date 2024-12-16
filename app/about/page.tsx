@@ -38,18 +38,17 @@ const page = () => {
       >
         <li className="text-white max-sm:text-center  self-center ">
           <span className="font-bold text-black px-3">
-            Generate Image (GET):
+            Generate Image (POST):
           </span>
           <br />
-          https://image.pollinations.ai/prompt/prompt - Params: prompt, model,
-          seed, width, height, nologo, private, enhance, safe - Return: Image
-          file
+          For Image Generation I have used Stablity ai and it's documentation as
+          a resource to genreate Image.
         </li>
         <li className="text-white max-sm:text-center">
-          <span className="font-bold px-3 text-black">Generate Text(GET):</span>
-          <br />
-          https://text.pollinations.ai/prompt - Params: prompt, model, seed,
-          json, system - Return: Generated text
+          <span className="font-bold px-3 text-black">
+            Generate Text(POST):
+          </span>
+          <br />I have used Gemini Api for text generation as LLM model.
         </li>
       </motion.ul>
       <motion.div

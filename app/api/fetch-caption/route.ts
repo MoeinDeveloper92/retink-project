@@ -1,32 +1,45 @@
+import { geminiModel } from '@/utils/gemini';
 import { NextRequest } from 'next/server';
 
-export const GET = async (request: NextRequest) => {
+export const POST = async (request: NextRequest) => {
   try {
-    const prompt = request.nextUrl.searchParams.get('prompt');
-    if (!prompt) {
+    if (request.method !== 'POST') {
       return new Response(
-        JSON.stringify({ message: 'Prmpt is required by the user' }),
+        JSON.stringify({ message: 'This must be a POSt request' }),
         { status: 400 }
       );
     }
-
-    const textResponse = await fetch(
-      `https://text.pollinations.ai/Generate caption which is maximum 100 words with hashtag for instagram post for this${encodeURIComponent(
-        prompt
-      )}`
-    );
-    //validate res
-    if (!textResponse.ok) {
-      return new Response(
-        JSON.stringify({ error: 'Model Failed at generating Caption' }),
-        { status: 500 }
-      );
-    }
-    const caption = await textResponse.text();
-    return new Response(JSON.stringify({ caption }), { status: 200 });
+    let prompt = request.nextUrl.searchParams.get('prompt');
+    prompt =
+      'Generate an instagram caption whihc would be maximum 100 words for this with appropriate hashtags ====> ' +
+      prompt;
+    const result = await geminiModel.generateContentStream(prompt);
+    const encoder = new TextEncoder();
+    const stream = new ReadableStream({
+      async start(controller) {
+        try {
+          for await (const chunk of result.stream) {
+            const chunkOfText = chunk.text();
+            console.log('Sending Chunk Of Data');
+            controller.enqueue(encoder.encode(chunkOfText));
+          }
+          controller.close();
+        } catch (error) {
+          console.error('Error while streaming:', error);
+          controller.error(error);
+        }
+      },
+    });
+    return new Response(stream, {
+      headers: {
+        'Content-Type': 'text/plain',
+        'Cache-Control': 'no-cache',
+        'Transfer-Encoding': 'chunked',
+      },
+    });
   } catch (error) {
-    console.error('Error fetching caption:', error);
-    return new Response(JSON.stringify({ error: 'Internal server error' }), {
+    console.log('Error in handler:', error);
+    return new Response(JSON.stringify({ message: 'Something went wrong' }), {
       status: 500,
     });
   }

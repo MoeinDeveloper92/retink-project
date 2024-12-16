@@ -4,14 +4,13 @@ import Image from 'next/image';
 import { motion } from 'framer-motion';
 import { toast } from 'react-toastify';
 import Spinner from '@/components/Spinner';
-import ShareButtons from '@/components/ShareButtons';
 import LoadingButton from '@/components/LoadingButton';
 import { Button } from '@/components/ui/button';
 import { fetchCaption, fetchImage, typeCaption } from '@/utils/request';
 const HomePage = () => {
   const [prompt, setPrompt] = useState<string>('');
   const [image, setImage] = useState<string | undefined>(undefined);
-  const [caption, setCaption] = useState<string>('');
+  const [responseText, setResponseText] = useState<string>('');
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | undefined>(undefined);
 
@@ -19,23 +18,20 @@ const HomePage = () => {
     e.preventDefault();
     setLoading(true);
     setError(undefined);
-    setCaption('');
+    setResponseText('');
     setImage('');
 
     try {
-      const imageUrl = await fetchImage(prompt);
-
-      const captionText = await fetchCaption(prompt);
-
+      let imageUrl = await fetchImage(prompt);
       setImage(imageUrl);
 
-      typeCaption(captionText, setCaption);
+      await fetchCaption(prompt, setResponseText, setLoading);
 
       setPrompt('');
     } catch (error: unknown) {
       if (error instanceof Error) {
         console.error(error.message);
-        setError('An error occurred. Please try again.');
+        setError(error.message);
       } else {
         console.error('An unknown error occurred');
         setError('An unknown error occurred');
@@ -53,7 +49,7 @@ const HomePage = () => {
 
   const handleReset = () => {
     setPrompt('');
-    setCaption('');
+    setResponseText('');
     setImage('');
   };
 
@@ -109,13 +105,13 @@ const HomePage = () => {
             />
           </motion.div>
         )}
-        {caption && (
+        {responseText.length > 1 && (
           <h1 className="mt-5 font-serif max-lg:max-w-[300px] max-lg:mb-12 mb-6 text-black text-justify">
-            Prepared Caption: {caption}
+            Prepared Caption: {responseText}
           </h1>
         )}
-        {caption && <ShareButtons />}
-        {caption && (
+
+        {responseText.length > 1 && (
           <div>
             <Button onClick={handleReset}>Reset</Button>
           </div>
