@@ -6,7 +6,7 @@ import { toast } from 'react-toastify';
 import Spinner from '@/components/Spinner';
 import LoadingButton from '@/components/LoadingButton';
 import { Button } from '@/components/ui/button';
-import { fetchCaption, fetchImage, typeCaption } from '@/utils/request';
+import { fetchCaption, fetchImage } from '@/utils/request';
 const HomePage = () => {
   const [prompt, setPrompt] = useState<string>('');
   const [image, setImage] = useState<string | undefined>(undefined);
@@ -22,7 +22,7 @@ const HomePage = () => {
     setImage('');
 
     try {
-      let imageUrl = await fetchImage(prompt);
+      const imageUrl = await fetchImage(prompt);
       setImage(imageUrl);
 
       await fetchCaption(prompt, setResponseText, setLoading);

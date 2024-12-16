@@ -41,7 +41,7 @@ const page = () => {
             Generate Image (POST):
           </span>
           <br />
-          For Image Generation I have used Stablity ai and it's documentation as
+          For Image Generation I have used Stablity ai and its documentation as
           a resource to genreate Image.
         </li>
         <li className="text-white max-sm:text-center">
@@ -67,7 +67,7 @@ const page = () => {
           <span>
             2-API keys and secrurity purposes to limit api call should be
             integrated
-          </span>{' '}
+          </span>
           <span>
             3-This API lacks security purposes because of no requirements of APi
             ky
